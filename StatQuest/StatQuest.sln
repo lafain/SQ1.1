@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
+# Visual Studio 2017
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatQuest", "StatQuest.csproj", "{6A7B8E60-7564-8973-7DD7-90DF6223DDC4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatQuest.Editor", "StatQuest.Editor.csproj", "{1F70B2FF-5E09-A1B8-B631-8A3F09DB6C90}"

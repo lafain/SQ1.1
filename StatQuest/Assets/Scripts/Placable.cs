@@ -53,7 +53,7 @@ public class Placable : MonoBehaviour {
             StartCoroutine(G.GM.AttackTargetClicked(G.GM.Hero1));
         }
         G.GM.HighlightAvailableTiles(PX, PY, cAP, 123456789, 123456789, 0);
-        yield return new WaitForSecondsRealtime(2);
+        yield return new WaitForSecondsRealtime(0.5f);
         if (PossibleMoves.Count != 0)
         {
             Tile TargetMove = PossibleMoves[Random.Range(0, PossibleMoves.Count)];
@@ -77,7 +77,7 @@ public class Placable : MonoBehaviour {
         TurnDone = true;
         G.GM.ToggleMoving(false);
 
-        yield return new WaitForSecondsRealtime(2);
+        yield return new WaitForSecondsRealtime(0.5f);
         G.GM.GS = GameManager.GameState.Play;
     }
     

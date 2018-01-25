@@ -41,6 +41,7 @@ public class UIManager : MonoBehaviour {
     bool Acting;
     bool NextInfo;
     bool RequireNext;
+    bool StartCameraControl;
 
     List<string> InfoPanelUpdates;
     public int InfoPanelTimer;
@@ -54,6 +55,7 @@ public class UIManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        StartCameraControl = false;
         RequireNext = false;
         NextInfo = false;
         InfoPanelTimer = 0;
@@ -62,18 +64,18 @@ public class UIManager : MonoBehaviour {
         Acting = false;
         AS = ActingState.None;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-        if(InfoPanelUpdates.Count != 0)
+
+    // Update is called once per frame
+    void Update() {
+        if (InfoPanelUpdates.Count != 0)
         {
             InfoPanel.gameObject.SetActive(true);
             InfoPanelTimer--;
             InfoText.text = InfoPanelUpdates[0];
 
-            if(RequireNext)
+            if (RequireNext)
             {
-                if(NextInfo)
+                if (NextInfo)
                 {
                     InfoPanelUpdates.RemoveAt(0);
                     InfoPanelTimer = 250;
@@ -81,7 +83,7 @@ public class UIManager : MonoBehaviour {
                 }
             }
             else
-            if(InfoPanelTimer == 0)
+            if (InfoPanelTimer == 0)
             {
                 InfoPanelUpdates.RemoveAt(0);
                 InfoPanelTimer = 250;
@@ -97,7 +99,7 @@ public class UIManager : MonoBehaviour {
 
         if (Physics.Raycast(mRay, out mHit))
         {
-            if(G.GM.GetHoveredPlacable(mHit.collider.gameObject))
+            if (G.GM.GetHoveredPlacable(mHit.collider.gameObject))
             {
                 BadNameText.text = mHit.collider.gameObject.GetComponent<Placable>().name;
                 BadHealthText.text = mHit.collider.gameObject.GetComponent<Placable>().cHealth.ToString();
@@ -128,7 +130,7 @@ public class UIManager : MonoBehaviour {
         {
             MoveAPText.text = G.GM.GetCurrentActorAPCostPerTile().ToString() + " per tile";
         }
-        
+
         if (Input.GetMouseButtonDown(0) && Acting && AS == ActingState.Attacking)
         {
             if (Physics.Raycast(mRay, out mHit))
@@ -136,25 +138,37 @@ public class UIManager : MonoBehaviour {
                 StartCoroutine(G.GM.AttackTargetClicked(mHit.collider.gameObject));
             }
         }
-                
-        if(Input.mousePosition.x < Screen.width * 0.03f)
-        {
-            WorldCamera.gameObject.transform.position += -WorldCamera.gameObject.transform.right * 0.1f;
-        }
 
-        if (Input.mousePosition.x > Screen.width * 0.97f)
-        {
-            WorldCamera.gameObject.transform.position += WorldCamera.gameObject.transform.right * 0.1f;
-        }
 
-        if (Input.mousePosition.y < Screen.height * 0.07f)
+        if ((Input.mousePosition.x > Screen.width * 0.03f) &&
+            (Input.mousePosition.x < Screen.width * 0.97f) &&
+            (Input.mousePosition.y > Screen.height * 0.07f) &&
+            (Input.mousePosition.y < Screen.height * 0.93f))
         {
-            WorldCamera.gameObject.transform.position += Vector3.RotateTowards(-WorldCamera.gameObject.transform.right,Vector3.forward, 1.5708f, 1.0f) * 0.1f;
+            StartCameraControl = true;
         }
-
-        if (Input.mousePosition.y > Screen.height * 0.93f)
+       
+        if (StartCameraControl)
         {
-            WorldCamera.gameObject.transform.position += -Vector3.RotateTowards(-WorldCamera.gameObject.transform.right, Vector3.forward, 1.5708f, 1.0f) * 0.1f;
+            if (Input.mousePosition.x < Screen.width * 0.03f)
+            {
+                WorldCamera.gameObject.transform.position += -WorldCamera.gameObject.transform.right * 0.1f;
+            }
+
+            if (Input.mousePosition.x > Screen.width * 0.97f)
+            {
+                WorldCamera.gameObject.transform.position += WorldCamera.gameObject.transform.right * 0.1f;
+            }
+
+            if (Input.mousePosition.y < Screen.height * 0.07f)
+            {
+                WorldCamera.gameObject.transform.position += Vector3.RotateTowards(-WorldCamera.gameObject.transform.right, Vector3.forward, 1.5708f, 1.0f) * 0.1f;
+            }
+
+            if (Input.mousePosition.y > Screen.height * 0.93f)
+            {
+                WorldCamera.gameObject.transform.position += -Vector3.RotateTowards(-WorldCamera.gameObject.transform.right, Vector3.forward, 1.5708f, 1.0f) * 0.1f;
+            }
         }
 
         if (Physics.Raycast(mRay, out mHit))
@@ -261,7 +275,7 @@ public class UIManager : MonoBehaviour {
         {
             Acting = false;
             AS = ActingState.None;
-            ItemText.text = "Detect";
+            DetectText.text = "Detect";
         }
     }
 
@@ -284,12 +298,15 @@ public class UIManager : MonoBehaviour {
             FortifyText.text = "Fortify";
             EquipText.text = "Equip";
             ItemText.text = "Item";
+            DetectText.text = "Detect";
        
     }
 
-    public void UpdateHeroCAP(int newCAP)
+    public void UpdateHeroStats(GameObject Hero1)
     {
-        APText.text = newCAP.ToString();
+        APText.text = Hero1.GetComponent<Placable>().cAP.ToString() + "/" + Hero1.GetComponent<Placable>().MaxAP.ToString();
+        HealthText.text = Hero1.GetComponent<Placable>().cHealth.ToString() + "/" + Hero1.GetComponent<Placable>().MaxHealth.ToString();
+        ArmorText.text = Hero1.GetComponent<Placable>().cArmor.ToString() + "/" + Hero1.GetComponent<Placable>().MaxArmor.ToString();
     }
 
     public void TogglePlayerMenu(bool Enable)
