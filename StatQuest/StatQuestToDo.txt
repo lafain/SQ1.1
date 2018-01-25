@@ -1,0 +1,5 @@
+StatQuest ToDo
+
+-Make 'Move' default back to 'x ap per tile' after turn and bring the sides in.
+-Maximum camera movement.
+-Back background a gradient.
